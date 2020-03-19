@@ -8,13 +8,18 @@
   },
   "author": "Christopher Rose",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "yargs": "^15.3.1"
+  },
   "devDependencies": {
     "eslint": "^6.8.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chrisvrose/ig-data-count.git"
+  },
+  "bin": {
+    "igdc": "index.js"
   },
   "keywords": [
     "count",

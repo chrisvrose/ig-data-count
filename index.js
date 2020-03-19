@@ -1,37 +1,49 @@
+#!/usr/bin/env node
+
 //@ts-check
 const fs = require('fs')
 const path = require('path')
+const yargs = require('yargs')
+    .version()
+    .scriptName("igdc")
+    .usage('$0 -i <filename> [-o <filename>]')
+    .demandOption('i')
+    .option('i', {
+        'alias': 'input',
+        'describe': 'Input file path'
+    })
+    .option('o', {
+        'alias': 'output',
+        'describe': 'Output file path'
+    })
+    .epilogue("Give me the messages.json file")
 
-const read = require('./utility/readPromise')
+//const read = require('./utility/readPromise')
 const writeToMarkDown = require('./utility/writeToMarkdown')
 
-console.log("Started")
-read.ask("File name(messages.json)\n:").then(answer => {
-    //if(answer==""){answer = "messages.json"}
-    fs.exists(answer, exists => {
-        if (exists) {
-            fs.readFile(path.normalize(answer), (err, data) => {
-                if (err) throw err;
-                let readObjects = JSON.parse(data.toString())
-                //console.log(readObjects.length)
-                getProperties(readObjects).then(reply => {
-                    //console.log(`Stats:\nParts:${reply.parts}\nCount:${reply.count}`)
-                    reply.forEach(e=>{
-                        console.log(`Name: ${e.person},Count: ${e.count},Parts: ${e.parts}`)
-                    })
-                    writeToMarkDown(reply);
-                    read.close()
-                },
-                    console.log
-                )
-            })
-        } else {
-            console.log("File does not exist")
-            read.close()
-        }
+//console.log("Started")
 
-    })
+let answer = yargs.argv.input.toString()
+//if(answer==""){answer = "messages.json"}
+fs.exists(answer, exists => {
+    if (exists) {
+        fs.readFile(path.normalize(answer), (err, data) => {
+            if (err) throw err;
+            let readObjects = JSON.parse(data.toString())
+            // eslint-disable-next-line no-unused-vars
+            getProperties(readObjects).then(_reply => {
+                
+            },
+                console.log
+            )
+        })
+    } else {
+        console.log("File does not exist")
+        //read.close()
+    }
+
 })
+
 
 
 /**
@@ -39,7 +51,7 @@ read.ask("File name(messages.json)\n:").then(answer => {
  * @param {Array<Object>} objectsRead 
  */
 async function getProperties(objectsRead) {
-    //let answer = await read.ask("Get List of users?(Y/N)\n:")
+
     //console.log("Got Answer:" + answer)
 
     /** @type {Array<String>} */
@@ -58,14 +70,20 @@ async function getProperties(objectsRead) {
 
     //Create a table
     let table = []
-    for(const value in people){
+    for (const value in people) {
         table.push({
             person: people[value],
-            ...await getLength(objectsRead,people[value])
+            ...await getLength(objectsRead, people[value])
         })
     }
+    let answer = yargs.argv.o
 
-    table.sort((a,b)=>{return a.count-b.count})
+    table.sort((a, b) => { return b.count - a.count })
+    if(answer){
+        writeToMarkDown(table, path.normalize(answer.toString()));
+    }else{
+        printOut(table)
+    }
     return table
 }
 
@@ -76,7 +94,7 @@ async function getProperties(objectsRead) {
  * @param {String} answer Name to search for
  * @returns {Promise<{parts:Number,count:Number}>} 
  */
-async function getLength(objectsRead,answer) {
+async function getLength(objectsRead, answer) {
     //let answer = await read.ask("Get which username?")
     let numbers = objectsRead.reduce((total, element) => {
         if (element.participants.find(participant => { return participant == answer })) {
@@ -88,4 +106,14 @@ async function getLength(objectsRead,answer) {
         return total
     }, { parts: 0, count: 0 })
     return numbers;
+}
+
+/**
+ * @param {{ parts: number; count: number; person: string; }[]} table
+ */
+function printOut(table){
+    console.log("Username\tMsgCount\tParts")
+    table.forEach(element=>{
+        console.log(`${element.person}\t${element.count}\t${element.parts}`)
+    })
 }
