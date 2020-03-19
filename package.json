@@ -1,15 +1,28 @@
 {
   "name": "instagram-data-count",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "Read messages.json to get a total conversation message count",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christopher Rose",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "eslint": "^6.8.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisvrose/ig-data-count.git"
+  },
+  "keywords": [
+    "count",
+    "messages",
+    "ig"
+  ],
+  "bugs": {
+    "url": "https://github.com/chrisvrose/ig-data-count/issues"
+  },
+  "homepage": "https://github.com/chrisvrose/ig-data-count#readme"
 }
