@@ -4,7 +4,8 @@
   "description": "Read messages.json to get a total conversation message count",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg . -d --out-path build"
   },
   "author": "Christopher Rose",
   "license": "MIT",
@@ -12,7 +13,8 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0"
+    "eslint": "^6.8.0",
+    "pkg": "^4.4.7"
   },
   "repository": {
     "type": "git",
